@@ -51,4 +51,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(libdatachannel)
 
-add_executable(h264_server main.cpp)
+add_executable(libdatachannel_with_mbedtls main.cpp)
+
+target_link_libraries(libdatachannel_with_mbedtls PRIVATE
+  LibDataChannel::LibDataChannel
+)
