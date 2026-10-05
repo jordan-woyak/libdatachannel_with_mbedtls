@@ -6,8 +6,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 include(FetchContent)
 
-set(MBEDTLS_CONFIG_FILE "mbedtls_config.h")
-
 add_compile_definitions(MBEDTLS_SSL_DTLS_SRTP)
 
 FetchContent_Declare(
