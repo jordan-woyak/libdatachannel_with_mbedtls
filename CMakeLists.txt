@@ -8,6 +8,8 @@ include(FetchContent)
 
 set(MBEDTLS_CONFIG_FILE "mbedtls_config.h")
 
+add_compile_definitions(MBEDTLS_SSL_DTLS_SRTP)
+
 FetchContent_Declare(
   MbedTLS
   GIT_REPOSITORY https://github.com/Mbed-TLS/mbedtls.git
@@ -23,6 +25,16 @@ target_link_libraries(MbedTLS::MbedTLS INTERFACE
     MbedTLS::mbedx509
     MbedTLS::mbedcrypto
 )
+#add_library(MbedTLS::MbedTLS INTERFACE IMPORTED)
+#add_library(MbedTLS::MBedTLS ALIAS mbedtls)
+
+#add_library(MbedTLS::MbedTLS ALIAS MbedTLS::mbedtls)
+
+if(TARGET mbedtls)
+   message(STATUS "got MbedTLS")
+else()
+   message(STATUS "don't got MbedTLS")
+endif()
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
@@ -42,6 +54,8 @@ set(NO_MEDIA OFF CACHE BOOL "" FORCE)
 set(NO_EXAMPLES ON CACHE BOOL "" FORCE)
 set(NO_TESTS ON CACHE BOOL "" FORCE)
 
+set(MbedTLS_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/mbedtls-src/include)
+
 FetchContent_Declare(
   libdatachannel
   GIT_REPOSITORY https://github.com/paullouisageneau/libdatachannel.git
@@ -51,8 +65,30 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(libdatachannel)
 
+# target_include_directories(datachannel PUBLIC
+#     ${CMAKE_CURRENT_SOURCE_DIR}/build/_deps/mbedtls-src/include
+# )
+
+#target_link_libraries(datachannel PRIVATE mbedtls)
+
+#target_compile_definitions(libdatachannel PRIVATE MBEDTLS_SSL_DTLS_SRTP)
+
+target_link_libraries(srtp2 PRIVATE MbedTLS::MbedTLS)
+#target_link_libraries(srtp2 PRIVATE MbedTLS::mbedx509)
+#target_link_libraries(srtp2 PRIVATE MbedTLS::mbedcrypto)
+#target_link_libraries(libsrtp2 MbedTLS::MbedTLS)
+#target_link_libraries(MbedTLS::MbedCrypto ALIAS mbedcrypto)
+#target_link_libraries(MbedTLS::MbedX509 ALIAS mbedx509)
+
 add_executable(libdatachannel_with_mbedtls main.cpp)
+
+#  target_link_libraries(datachannel PRIVATE
+#    mbedcrypto
+#    mbedtls
+#    mbedx509
+#  )
 
 target_link_libraries(libdatachannel_with_mbedtls PRIVATE
   LibDataChannel::LibDataChannel
+  mbedtls
 )
