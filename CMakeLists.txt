@@ -61,7 +61,7 @@ FetchContent_Declare(
   GIT_TAG 6b1e2e620f1e37f0eafeee702eaea0043cb305fd
   GIT_SHALLOW TRUE
   PATCH_COMMAND
-    git apply "${CMAKE_CURRENT_SOURCE_DIR}/srtpCMakeLists.patch"
+    git apply "${CMAKE_CURRENT_SOURCE_DIR}/srtpCMakeLists.patch" || true
 )
 FetchContent_MakeAvailable(libdatachannel)
 
